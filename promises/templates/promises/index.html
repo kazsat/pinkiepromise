@@ -1,0 +1,14 @@
+{% extends 'promises/base.html' %}
+
+{% block title %}Portal{%endblock%}
+
+{% block content %}
+<br />
+{% for promise in promises.all %}
+<h2>{{promise.title}}</h2>
+
+<br />
+
+{% endfor %}
+
+{%endblock%}

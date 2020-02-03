@@ -130,3 +130,9 @@ dmypy.json
 
 # VSCode
 .vscode/
+
+# Memo
+memo.md
+
+# sample app
+posts/
