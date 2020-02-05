@@ -19,13 +19,15 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from django.conf.urls import url
-from posts import views
+# from posts import views
+from promises import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('promises/', include('promises.urls')),
     path('', include('promises.urls')),
     path('accounts/', include('django.contrib.auth.urls')), #  追加
+    path('ca/', views.account, name='account'),
     # path('posts/', include('posts.urls')),
     # path('posts/<int:post_id>/', views.post_detail, name='post_detail')
 

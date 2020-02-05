@@ -1,14 +1,18 @@
-{% extends 'promises/base.html' %}
+{% extends 'base.html' %}
 
-{% block title %}Portal{%endblock%}
+{% block title %}Pinkie Promise Home{% endblock %}
 
 {% block content %}
-<br />
 {% for promise in promises.all %}
-<h2>{{promise.title}}</h2>
 
 <br />
+#{{ promise.id }}
+<br />
+<h3><a href="{% url 'promise_detail' promise.id %}"> {{ promise.title }}</a></h3>
+<br />
+{{ promise.promise_date }}
 
 {% endfor %}
 
-{%endblock%}
+
+{% endblock %}
