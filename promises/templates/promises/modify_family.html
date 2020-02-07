@@ -1,17 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Make Promise{% endblock %}
+{% block title %}Modify Family{% endblock %}
 
 {% block content %}
 <br />
-
 <!-- <form method="POST" action="{% url 'account' %}"> -->
 <form method="post" enctype="multipart/form-data" action="">
     {% csrf_token %}
     {{ form }}
 
     <div class="form-group text-right" style="padding:20px 0">
-        <button type="submit" class="btn btn-primary">Make</button>
+        <button type="submit" class="btn btn-primary">Modify</button>
     </div>
 </form>
 

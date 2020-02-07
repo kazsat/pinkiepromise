@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from .models import Promise
+from .models import Promise, Family
 
 from django.contrib.auth.decorators import login_required
 
@@ -15,6 +15,42 @@ def index(request):
 def promise_detail(request, promise_id):
     promise = get_object_or_404(Promise, pk=promise_id)
     return render(request, 'promises/promise_detail.html', {'promise': promise})
+
+
+from .forms import PromiseForm
+from .forms import FamilyForm
+
+@login_required
+def make_promise(request):
+    form = PromiseForm()
+    return render(request, 'promises/make_promise.html', {'form': form,})
+
+# @login_required
+# def modify_family(request):
+#     form = FamilyForm()
+#     return render(request, 'promises/modify_family.html', {'form': form,})
+
+@login_required
+def modify_family(request):
+    form = FamilyForm(request.POST or None)
+    if form.is_valid():
+        # Family.objects.create(**form.changed_data)
+        Family.objects.create(**form.cleaned_data)
+        return redirect('/family')
+
+    return render(request, 'promises/modify_family.html', {'form': form,})
+
+# def hello_models(request):
+#     form  = HelloForm(request.POST or None)
+#     if form.is_valid():
+#         models.Hello.objects.create(**form.cleaned_data)
+#         return redirect('app1:index')
+ 
+#     d = {
+#         'form' : form,
+#         'hello_qs': models.Hello.objects.all().order_by('-id'),
+#     }
+#     return render(request, 'models.html', d)
 
 
 from django.shortcuts import render, redirect

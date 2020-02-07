@@ -13,7 +13,7 @@ class Promise(models.Model):
 
     reward = models.TextField(blank=True, null=True)
     reward_url = models.TextField(blank=True, null=True)
-    reward_image = models.ImageField(blank=True, null=True, upload_to='media/')
+    # reward_image = models.ImageField(blank=True, null=True, upload_to='media/')
 
     def __str__(self):
         return self.title
