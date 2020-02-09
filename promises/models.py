@@ -1,18 +1,45 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
+class Family(models.Model):
+    family_name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.family_name
+
+class User(AbstractUser):
+    family_id = models.ForeignKey(Family, on_delete=models.SET_NULL, null=True)
+    # family_id = models.IntegerField(null=True)
+    # is_child = models.BooleanField(default=False)
 
 class Promise(models.Model):
-    family_id = models.IntegerField(blank=True, null=True, default=0)
+    STATUS_DRAFT = 1
+    STATUS_REJECTED = 2
+    STATUS_PROMISED = 3
+    STATUS_FAILED = 4
+    STATUS_COMPLETED = 5
+
+    STATUS_CHOICES = (
+        (STATUS_DRAFT, 'Draft'),
+        (STATUS_REJECTED, 'Rejected'),
+        (STATUS_PROMISED, 'Promised'),
+        (STATUS_FAILED, 'Failed'),
+        (STATUS_COMPLETED, 'Completed'),
+    )
+
+    # family_id = models.IntegerField()
+    family_id = models.ForeignKey(Family, on_delete=models.PROTECT)
     title = models.CharField(max_length=100)
-    promise_date = models.DateTimeField()
-    dead_line = models.DateTimeField(blank=True, null=True)
+    status = models.IntegerField(choices=STATUS_CHOICES)
+    promise_date = models.DateField()
+    dead_line = models.DateField()
     description = models.TextField()
 
-    performer_person_id = models.IntegerField(blank=True, null=True, default=0)
-    rewarder_person_id = models.IntegerField(blank=True, null=True, default=0)
+    # performer_person_id = models.IntegerField(blank=True, null=True, default=0)
+    # rewarder_person_id = models.IntegerField(blank=True, null=True, default=0)
 
-    reward = models.TextField(blank=True, null=True)
-    reward_url = models.TextField(blank=True, null=True)
+    reward = models.TextField()
+    # reward_url = models.TextField(blank=True, null=True)
     # reward_image = models.ImageField(blank=True, null=True, upload_to='media/')
 
     def __str__(self):
@@ -22,20 +49,12 @@ class Promise(models.Model):
 # class PromiseDetail(models.Model):
 #     promise_id = models.IntegerField()
 
+# class Person(models.Model):
+#     family_id = models.IntegerField()
+#     first_name = models.CharField(max_length=20)
+#     last_name = models.CharField(max_length=20)
+#     mail_address = models.CharField(max_length=100)
+#     is_child = models.BooleanField(default=False)
 
-class Family(models.Model):
-    family_name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.family_name
-
-
-class Person(models.Model):
-    family_id = models.IntegerField(blank=True, null=True, default=0)
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
-    mail_address = models.CharField(max_length=100, blank=True, null=True)
-    is_child = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.first_name + ' ' + self.last_name
+#     def __str__(self):
+#         return self.first_name + ' ' + self.last_name

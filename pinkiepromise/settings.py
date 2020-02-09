@@ -39,8 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'posts.apps.PostsConfig',
     'promises.apps.PromisesConfig',
+    # 'users.apps.UsersConfig',
+    # 'users',
     # 'accounts.apps.AccountsConfig', # added
 ]
+
+# Application definition
+# AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'promises.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

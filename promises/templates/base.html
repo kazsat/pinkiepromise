@@ -30,7 +30,7 @@
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/make">Promise</a>
+                    <a class="nav-link" href="/promise">Promise</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/family">Family</a>
@@ -39,7 +39,7 @@
         </div>
         <span class="navbar-text text-success">
             {% if user.is_authenticated %}
-            Logged in as {{ user.get_username }}
+            Hello {{ user.get_username }}
 
             {% else %}
             Logged in as a guest

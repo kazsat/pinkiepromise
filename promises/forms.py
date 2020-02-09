@@ -42,6 +42,8 @@ class UserCreateForm(UserCreationForm):
     # message = forms.CharField(max_length=1000)
     # sender = forms.EmailField()
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 class PromiseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -50,11 +52,17 @@ class PromiseForm(forms.ModelForm):
             field.widget.attrs["class"] = "form-control"
         self.fields['description'].widget.attrs['rows'] = '3'
         self.fields['reward'].widget.attrs['rows'] = '3'
-        self.fields['reward_url'].widget.attrs['rows'] = '3'
+        # self.fields['reward_url'].widget.attrs['rows'] = '3'
 
     class Meta:
         model = Promise
-        fields = ('family_id', 'title', 'promise_date', 'dead_line', 'description', 'performer_person_id', 'rewarder_person_id', 'reward', 'reward_url')
+        # fields = ('family_id', 'title', 'promise_date', 'dead_line', 'description', 'performer_person_id', 'rewarder_person_id', 'reward', 'reward_url')
+        fields = '__all__'
+        widgets = {
+            # 'promise_date': DateInput(),
+            'dead_line': DateInput(),
+        }
+        exclude = ('family_id', 'status', 'promise_date')
 
 class FamilyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

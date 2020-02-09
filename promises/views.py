@@ -1,8 +1,12 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
-from .models import Promise, Family
+import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+
+from .models import Promise, Family
+from .forms import PromiseForm, FamilyForm
+
 
 @login_required
 def index(request):
@@ -17,13 +21,21 @@ def promise_detail(request, promise_id):
     return render(request, 'promises/promise_detail.html', {'promise': promise})
 
 
-from .forms import PromiseForm
-from .forms import FamilyForm
 
 @login_required
 def make_promise(request):
-    form = PromiseForm()
+    form = PromiseForm(request.POST or None)
+
+    if form.is_valid():
+        form.cleaned_data['family_id'] = request.user.family_id
+        form.cleaned_data['status'] = Promise.STATUS_DRAFT
+        form.cleaned_data['promise_date'] = datetime.date.today()
+
+        Promise.objects.create(**form.cleaned_data)
+        return redirect('/promise')
+
     return render(request, 'promises/make_promise.html', {'form': form,})
+
 
 # @login_required
 # def modify_family(request):

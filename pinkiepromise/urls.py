@@ -28,6 +28,8 @@ urlpatterns = [
     path('', include('promises.urls')),
     path('accounts/', include('django.contrib.auth.urls')), #  追加
     path('ca/', views.account, name='account'),
+    # path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
     # path('posts/', include('posts.urls')),
     # path('posts/<int:post_id>/', views.post_detail, name='post_detail')
 
