@@ -52,6 +52,13 @@ def modify_family(request):
 
     return render(request, 'promises/modify_family.html', {'form': form,})
 
+from django.contrib.auth import logout
+
+def logout_view(request):
+    logout(request)
+    return redirect('/accounts')
+    # Redirect to a success page.
+
 # def hello_models(request):
 #     form  = HelloForm(request.POST or None)
 #     if form.is_valid():

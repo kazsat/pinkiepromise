@@ -17,8 +17,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
-
 from django.conf.urls import url
+# from django.contrib.auth import views as auth_views
+
 # from posts import views
 from promises import views
 
@@ -28,7 +29,7 @@ urlpatterns = [
     path('', include('promises.urls')),
     path('accounts/', include('django.contrib.auth.urls')), #  追加
     path('ca/', views.account, name='account'),
-    # path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('logout/', views.logout_view , name='logout_view'),
 
     # path('posts/', include('posts.urls')),
     # path('posts/<int:post_id>/', views.post_detail, name='post_detail')

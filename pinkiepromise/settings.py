@@ -135,3 +135,5 @@ MEDIA_ROOT = BASE_DIR
 
 # ログイン後トップページにリダイレクト
 LOGIN_REDIRECT_URL = '/'
+
+LOGOUT_REDIRECT_URL = '/'
