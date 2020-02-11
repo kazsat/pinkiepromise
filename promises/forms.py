@@ -20,10 +20,12 @@ class UserCreateForm(UserCreationForm):
         self.fields['username'].widget.attrs['class'] = 'form-control'
         self.fields['password1'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].widget.attrs['class'] = 'form-control'
+        # self.fields['family_id'].widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = User
-        fields = ("username", "password1", "password2",)
+        # fields = ("username", "password1", "password2", "family_id")
+        fields = ("username", "password1", "password2")
 
 
 # class PromiseForm(forms.Form):

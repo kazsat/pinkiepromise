@@ -83,7 +83,15 @@ class Account(CreateView):
     def post(self, request, *args, **kwargs):
         form = UserCreateForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            # form.family_id = 1
+            # form.cleaned_data['family_id'] = request.user.family_id
+            # form.cleaned_data['family_id_id'] = 1
+
+            # form.save()
+            form_dat = form.save(commit = False)
+            form_dat.family_id = request.user.family_id
+            form_dat.save()
+
             #フォームから'username'を読み取る
             username = form.cleaned_data.get('username')
             #フォームから'password1'を読み取る
@@ -94,7 +102,12 @@ class Account(CreateView):
         return render(request, 'promises/create_account.html', {'form': form,})
 
     def get(self, request, *args, **kwargs):
+        # initial_dict = {
+        #     'username': 'ahoaho',
+        #     'family_id': 'sato',
+        # }
+        # form = UserCreateForm(request.POST, initial=initial_dict)
         form = UserCreateForm(request.POST)
-        return  render(request, 'promises/create_account.html', {'form': form,})
+        return render(request, 'promises/create_account.html', {'form': form,})
 
 account = Account.as_view()
