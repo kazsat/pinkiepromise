@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 
 from .models import Promise, Family
-from .forms import PromiseForm, FamilyForm
+from .forms import PromiseForm, FamilyForm, PromiseDetailForm
 
 
 @login_required
@@ -15,11 +15,71 @@ def index(request):
     return render(request, 'promises/index.html', {'promises': promises})
 
 
+# @login_required
+# def promise_detail(request, promise_id):
+#     promise = get_object_or_404(Promise, pk=promise_id)
+#     return render(request, 'promises/promise_detail.html', {'promise': promise})
+
+# @login_required
+# def promise_detail(request, promise_id):
+#     promise = get_object_or_404(Promise, pk=promise_id)
+#     initial_dict = {
+#         'family': promise.family,
+#         'title': promise.title,
+#         'status': promise.status,
+#         'promise_date': promise.promise_date,
+#         'dead_line': promise.dead_line,
+#         'description': promise.description,
+#         'performer': promise.performer,
+#         'rewarder': promise.rewarder,
+#         'reward': promise.reward
+#     }
+#     form = PromiseDetailForm(request.POST or None, initial=initial_dict)
+
+#     if form.is_valid():
+#         # form.cleaned_data['family'] = request.user.family
+#         # form.cleaned_data['status'] = Promise.STATUS_DRAFT
+#         # form.cleaned_data['promise_date'] = datetime.date.today()
+
+#         form.cleaned_data['status'] = Promise.STATUS_PROMISED
+#         Promise.objects.update(**form.cleaned_data)
+#         # return render(request, 'promises/promise_detail.html', {'promise': promise})
+
+#     return render(request, 'promises/promise_detail2.html', {'form': form, 'button_name': 'Accept'})
+
+
+
 @login_required
 def promise_detail(request, promise_id):
-    promise = get_object_or_404(Promise, pk=promise_id)
-    return render(request, 'promises/promise_detail.html', {'promise': promise})
 
+    promise = get_object_or_404(Promise, pk=promise_id)
+
+    if request.method == 'POST':
+        promise.status = Promise.STATUS_PROMISED
+        promise.save()
+        return redirect('/')
+        # form = PromiseDetailForm(request.POST)
+        # if form.is_valid():
+
+        #     form.cleaned_data['status'] = Promise.STATUS_PROMISED
+        #     Promise.objects.update(**form.cleaned_data)
+
+        #     return redirect('/')
+    else:
+        initial_dict = {
+            'family': promise.family,
+            'title': promise.title,
+            'status': promise.status,
+            'promise_date': promise.promise_date,
+            'dead_line': promise.dead_line,
+            'description': promise.description,
+            'performer': promise.performer,
+            'rewarder': promise.rewarder,
+            'reward': promise.reward
+        }
+        form = PromiseDetailForm(request.POST or None, initial=initial_dict)
+
+    return render(request, 'promises/promise_detail.html', {'form': form, 'button_name': 'Accept'})
 
 
 @login_required
@@ -27,7 +87,7 @@ def make_promise(request):
     form = PromiseForm(request.POST or None)
 
     if form.is_valid():
-        form.cleaned_data['family_id'] = request.user.family_id
+        form.cleaned_data['family'] = request.user.family
         form.cleaned_data['status'] = Promise.STATUS_DRAFT
         form.cleaned_data['promise_date'] = datetime.date.today()
 
@@ -89,7 +149,7 @@ class Account(CreateView):
 
             # form.save()
             form_dat = form.save(commit = False)
-            form_dat.family_id = request.user.family_id
+            form_dat.family = request.user.family
             form_dat.save()
 
             #フォームから'username'を読み取る

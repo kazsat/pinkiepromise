@@ -24,8 +24,8 @@ class UserCreateForm(UserCreationForm):
 
     class Meta:
         model = User
-        # fields = ("username", "password1", "password2", "family_id")
-        fields = ("username", "password1", "password2")
+        # fields = ('username', 'password1', 'password2', 'family_id')
+        fields = ('username', 'password1', 'password2')
 
 
 # class PromiseForm(forms.Form):
@@ -51,7 +51,7 @@ class PromiseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PromiseForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs["class"] = "form-control"
+            field.widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['rows'] = '3'
         self.fields['reward'].widget.attrs['rows'] = '3'
         # self.fields['reward_url'].widget.attrs['rows'] = '3'
@@ -64,24 +64,45 @@ class PromiseForm(forms.ModelForm):
             # 'promise_date': DateInput(),
             'dead_line': DateInput(),
         }
-        exclude = ('family_id', 'status', 'promise_date')
+        exclude = ('family', 'status', 'promise_date')
 
 class FamilyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FamilyForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs["class"] = "form-control"
+            field.widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = Family
         fields = ('family_name',)
 
-# class RestaurantForm(ModelForm):
-#     def __init__(self, *args, **kwargs):
-#         super(RestaurantForm, self).__init__(*args, **kwargs)
-#         for field in self.fields.values():
-#             field.widget.attrs["class"] = "form-control"
 
+class PromiseDetailForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(PromiseDetailForm, self).__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['disabled'] = 'disabled'
+
+            # if status not in (Promise.STATUS_REJECTED):
+            #     field.widget.attrs['disabled'] = 'disabled'
+            #     # field.widget.attrs['readonly'] = 'readonly'
+
+        self.fields['description'].widget.attrs['rows'] = '3'
+        self.fields['reward'].widget.attrs['rows'] = '3'
+
+    class Meta:
+        model = Promise
+        fields = ('family', 'title', 'status', 'promise_date', 'dead_line', 'description', 'performer', 'rewarder', 'reward')
+
+# TODO:should be removed
+# class TestForm(forms.ModelForm):
+#     date = forms.CharField(disabled=True)
 #     class Meta:
-#         model = Restaurant
-#         exclude = ('user', 'date',)
+#         model = Test
+#         fields = ['date']
+#         widgets = {
+#             'date': forms.TextInput(attrs={'readonly': 'readonly'}),
+#         }

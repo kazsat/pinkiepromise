@@ -3,16 +3,33 @@
 {% block title %}Pinkie Promise Home{% endblock %}
 
 {% block content %}
-{% for promise in promises.all %}
-
 <br />
-#{{ promise.id }}
-<br />
-<h3><a href="{% url 'promise_detail' promise.id %}"> {{ promise.title }}</a></h3>
-<br />
-{{ promise.promise_date }}
 
-{% endfor %}
-
+<table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">title</th>
+        <th scope="col">promise_date</th>
+        <th scope="col">status</th>
+        <th scope="col">dead_line</th>
+        <th scope="col">performer</th>
+        <th scope="col">rewarder</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for promise in promises.all %}
+        <tr>
+            <th scope="row">{{ promise.id }}</th>
+            <td><a href="{% url 'promise_detail' promise.id %}"> {{ promise.title }}</a></td>
+            <td>{{ promise.promise_date }}</td>
+            <td>{{ promise.get_status_display }}</td>
+            <td>{{ promise.dead_line }}</td>
+            <td>{{ promise.performer }}</td>
+            <td>{{ promise.rewarder }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
 
 {% endblock %}

@@ -8,9 +8,15 @@ class Family(models.Model):
         return self.family_name
 
 class User(AbstractUser):
-    family_id = models.ForeignKey(Family, on_delete=models.SET_NULL, null=True)
+    family = models.ForeignKey(Family, on_delete=models.SET_NULL, null=True)
     # family_id = models.IntegerField(null=True)
     # is_child = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.first_name:
+            return self.first_name
+        else:
+            return self.username
 
 class Promise(models.Model):
     STATUS_DRAFT = 1
@@ -28,15 +34,15 @@ class Promise(models.Model):
     )
 
     # family_id = models.IntegerField()
-    family_id = models.ForeignKey(Family, on_delete=models.PROTECT)
+    family = models.ForeignKey(Family, on_delete=models.PROTECT)
     title = models.CharField(max_length=100)
     status = models.IntegerField(choices=STATUS_CHOICES)
     promise_date = models.DateField()
     dead_line = models.DateField()
     description = models.TextField()
 
-    # performer_person_id = models.IntegerField(blank=True, null=True, default=0)
-    # rewarder_person_id = models.IntegerField(blank=True, null=True, default=0)
+    rewarder = models.ForeignKey(User, on_delete=models.PROTECT, related_name='promise_created')
+    performer = models.ForeignKey(User, on_delete=models.PROTECT, related_name='promise_assigned')
 
     reward = models.TextField()
     # reward_url = models.TextField(blank=True, null=True)

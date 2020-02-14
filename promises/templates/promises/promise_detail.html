@@ -3,11 +3,15 @@
 {% block title %}Promise Detail{% endblock %}
 
 {% block content %}
+<br />
+<!-- <form method="POST" action="{% url 'account' %}"> -->
+<form method="post" enctype="multipart/form-data" action="">
+    {% csrf_token %}
+    {{ form }}
 
-#{{ promise.id }}
-<br />
-{{ promise.title }}
-<br />
-{{ promise.promise_date }}
+    <div class="form-group text-right" style="padding:20px 0">
+        <button type="submit" class="btn btn-primary">{{ button_name }}</button>
+    </div>
+</form>
 
 {% endblock %}
