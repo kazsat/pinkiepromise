@@ -49,7 +49,7 @@ class DateInput(forms.DateInput):
 
 class PromiseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(PromiseForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
         self.fields['description'].widget.attrs['rows'] = '3'
@@ -68,7 +68,7 @@ class PromiseForm(forms.ModelForm):
 
 class FamilyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(FamilyForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
@@ -80,7 +80,7 @@ class FamilyForm(forms.ModelForm):
 class PromiseDetailForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(PromiseDetailForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'

@@ -10,8 +10,16 @@
     {{ form }}
 
     <div class="form-group text-right" style="padding:20px 0">
-        <button type="submit" class="btn btn-primary">{{ button_name }}</button>
+        {% if button_count == 0 %}
+            <button type="submit" class="btn btn-primary" name="OK">OK</button>
+        {% elif button_count == 1 %}
+            <button type="submit" class="btn btn-primary" name="{{ button_name1 }}">{{ button_name1 }}</button>
+        {% elif button_count == 2 %}
+            <button type="submit" class="btn btn-primary" name="{{ button_name1 }}">{{ button_name1 }}</button>
+            <button type="submit" class="btn btn-primary" name="{{ button_name2 }}">{{ button_name2 }}</button>
+        {% endif %}
     </div>
+
 </form>
 
 {% endblock %}

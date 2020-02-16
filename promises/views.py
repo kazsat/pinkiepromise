@@ -10,8 +10,10 @@ from .forms import PromiseForm, FamilyForm, PromiseDetailForm
 
 @login_required
 def index(request):
+    # promises = Promise.objects.all().order_by('-promise_date')
+    promises = Promise.objects.filter(family=request.user.family, deleted_at__isnull=True).order_by('-promise_date')
+
     # return render(request, 'promises/index.html')
-    promises = Promise.objects.order_by('-promise_date')
     return render(request, 'promises/index.html', {'promises': promises})
 
 
@@ -54,16 +56,29 @@ def promise_detail(request, promise_id):
 
     promise = get_object_or_404(Promise, pk=promise_id)
 
+    # todo:delete function
     if request.method == 'POST':
-        promise.status = Promise.STATUS_PROMISED
+        if 'Revise' in request.POST:
+            promise.status = Promise.STATUS_DRAFT
+        elif 'Delete' in request.POST:
+            promise.deleted_at = datetime.datetime.now()
+        elif 'Reject' in request.POST:
+            promise.status = Promise.STATUS_REJECTED
+        elif 'Accept' in request.POST:
+            promise.status = Promise.STATUS_PROMISED
+        elif 'Failed' in request.POST:
+            promise.status = Promise.STATUS_FAILED
+        elif 'Completed' in request.POST:
+            promise.status = Promise.STATUS_COMPLETED
+        elif 'Rewarded' in request.POST:
+            promise.status = Promise.STATUS_REWARDED
+
         promise.save()
         return redirect('/')
         # form = PromiseDetailForm(request.POST)
         # if form.is_valid():
-
         #     form.cleaned_data['status'] = Promise.STATUS_PROMISED
         #     Promise.objects.update(**form.cleaned_data)
-
         #     return redirect('/')
     else:
         initial_dict = {
@@ -79,7 +94,43 @@ def promise_detail(request, promise_id):
         }
         form = PromiseDetailForm(request.POST or None, initial=initial_dict)
 
-    return render(request, 'promises/promise_detail.html', {'form': form, 'button_name': 'Accept'})
+    # only performer can accept promise. others just can see the details.
+    button_count = 0
+    button_name1 = ''
+    button_name2 = ''
+
+    if request.user.id == promise.performer.id:
+        if promise.status == Promise.STATUS_DRAFT:
+            # accept or reject
+            button_count = 2
+            button_name1 = 'Accept'
+            button_name2 = 'Reject'
+        elif promise.status == Promise.STATUS_COMPLETED:
+            # rewarded
+            button_count = 1
+            button_name1 = 'Rewarded'
+    elif request.user.id == promise.rewarder.id:
+        if promise.status == Promise.STATUS_REJECTED:
+            # revise or delete
+            button_count = 2
+            button_name1 = 'Revise'
+            button_name2 = 'Delete'
+        elif promise.status == Promise.STATUS_PROMISED:
+            # completed or failed
+            button_count = 2
+            button_name1 = 'Completed'
+            button_name2 = 'Failed'
+    else:
+        # others only can see the details
+        pass
+
+    d = {
+        'form': form,
+        'button_name1': button_name1,
+        'button_name2': button_name2,
+        'button_count': button_count,
+    }
+    return render(request, 'promises/promise_detail.html', d)
 
 
 @login_required
