@@ -11,10 +11,57 @@ from .forms import PromiseForm, FamilyForm, PromiseDetailForm
 @login_required
 def index(request):
     # promises = Promise.objects.all().order_by('-promise_date')
-    promises = Promise.objects.filter(family=request.user.family, deleted_at__isnull=True).order_by('-promise_date')
+    promises = Promise.objects.filter(
+        family=request.user.family, deleted_at__isnull=True).order_by('-promise_date')
 
+    # number of promise you offered
+    offer_count = Promise.objects.filter(
+        family=request.user.family,
+        deleted_at__isnull=True,
+        performer=request.user.id,
+        status=Promise.STATUS_DRAFT
+    ).count()
+
+    reject_count = Promise.objects.filter(
+        family=request.user.family,
+        deleted_at__isnull=True,
+        rewarder=request.user.id,
+        status=Promise.STATUS_REJECTED
+    ).count()
+
+    ongoing_count = Promise.objects.filter(
+        family=request.user.family,
+        deleted_at__isnull=True,
+        performer=request.user.id,
+        dead_line__gte=datetime.date.today(),
+        status=Promise.STATUS_PROMISED
+    ).count()
+
+    evaluate_count = Promise.objects.filter(
+        family=request.user.family,
+        deleted_at__isnull=True,
+        rewarder=request.user.id,
+        dead_line__lt=datetime.date.today(),
+        status=Promise.STATUS_PROMISED
+    ).count()
+
+    complete_count = Promise.objects.filter(
+        family=request.user.family,
+        deleted_at__isnull=True,
+        performer=request.user.id,
+        status=Promise.STATUS_COMPLETED
+    ).count()
+
+    d = {
+        'promises': promises,
+        'offer_count': offer_count,
+        'reject_count': reject_count,
+        'ongoing_count': ongoing_count,
+        'evaluate_count': evaluate_count,
+        'complete_count': complete_count,
+    }
     # return render(request, 'promises/index.html')
-    return render(request, 'promises/index.html', {'promises': promises})
+    return render(request, 'promises/index.html', d)
 
 
 # @login_required
@@ -56,7 +103,6 @@ def promise_detail(request, promise_id):
 
     promise = get_object_or_404(Promise, pk=promise_id)
 
-    # todo:delete function
     if request.method == 'POST':
         if 'Revise' in request.POST:
             promise.status = Promise.STATUS_DRAFT

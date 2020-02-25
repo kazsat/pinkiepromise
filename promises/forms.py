@@ -64,7 +64,7 @@ class PromiseForm(forms.ModelForm):
             # 'promise_date': DateInput(),
             'dead_line': DateInput(),
         }
-        exclude = ('family', 'status', 'promise_date')
+        exclude = ('family', 'status', 'promise_date', 'deleted_at')
 
 class FamilyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
