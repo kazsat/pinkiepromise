@@ -6,6 +6,7 @@
 <br />
 <h2>Dash Board</h2>
 <br />
+<h5>最近の約束（最終更新5件）</h5>
 <table class="table table-striped table-hover">
   <thead>
     <tr>
@@ -40,11 +41,13 @@
 </table>
 
 <br />
-
+<h5>アクション</h5>
+{% if all_count == 0 %}
+<p>必要なアクションはありません。</p>
+{% endif %}
 <div class="row">
 
   {% if offer_count > 0 %}
-
   <div class="col-lg-4">
     <div class="card">
       <div class="card-body">
@@ -55,11 +58,9 @@
       </div>
     </div>
   </div>
-
   {% endif %}
 
   {% if reject_count > 0 %}
-
   <div class="col-lg-4">
     <div class="card">
       <div class="card-body">
@@ -73,7 +74,6 @@
   {% endif %}
 
   {% if ongoing_count > 0 %}
-
   <div class="col-lg-4">
     <div class="card">
       <div class="card-body">
@@ -87,7 +87,6 @@
   {% endif %}
 
   {% if evaluate_count > 0 %}
-
   <div class="col-lg-4">
     <div class="card">
       <div class="card-body">

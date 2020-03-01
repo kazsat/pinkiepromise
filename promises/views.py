@@ -7,12 +7,23 @@ from django.shortcuts import render, get_object_or_404
 from .models import Promise, Family
 from .forms import PromiseForm, FamilyForm, PromiseDetailForm
 
+from django.views.generic import ListView
+
+class PromiseList(ListView):
+    model = Promise
+    template_name = 'promise_list.html'
+    context_object_name = 'object_list'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Promise.objects.order_by('promise_date')
+
 
 @login_required
 def index(request):
     # promises = Promise.objects.all().order_by('-promise_date')
     promises = Promise.objects.filter(
-        family=request.user.family, deleted_at__isnull=True).order_by('-promise_date')
+        family=request.user.family, deleted_at__isnull=True).order_by('-updated_at')[:5]
 
     # number of promise you offered
     offer_count = Promise.objects.filter(
@@ -52,6 +63,8 @@ def index(request):
         status=Promise.STATUS_COMPLETED
     ).count()
 
+    all_count = offer_count + reject_count + ongoing_count + evaluate_count + complete_count
+
     d = {
         'promises': promises,
         'offer_count': offer_count,
@@ -59,6 +72,7 @@ def index(request):
         'ongoing_count': ongoing_count,
         'evaluate_count': evaluate_count,
         'complete_count': complete_count,
+        'all_count': all_count,
     }
     # return render(request, 'promises/index.html')
     return render(request, 'promises/index.html', d)
